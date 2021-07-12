@@ -38,22 +38,46 @@ const App = {
         const uploadMetadata = {
             apiKey: '5IMtHxK6FwtjLOiNFZ1BxA==',
             apiSecret: '2wCDPZz3HstZ/wsPPUZx4eXJ7qSWtPShy8dT7/jjiDg=',
-            key: `metadata/${metadata.timestamp}.json`,
+            key: `${metadata.timestamp}.json`,
             data: JSON.stringify(metadata),
         }
 
+        console.log('beginning upload')
         const result = await fleek.upload(uploadMetadata)
+        console.log("uploaded to fleek")
         this.createRecipe(recipeName, method, result.publicUrl)
 
     },
 
     createRecipe: async function(recipeName, method, URL) {
         await this.recipeContract.methods._createRecipe(recipeName, method).send({ from: this.accountAddress });
-        this.displaySuccess(`You have created a recipe! View the data here: <a href="${URL}" target="_blank">here</a>.`)
+        this.displaySuccess(`You have created a recipe! View the data here: <a href="${URL}" target="_blank">here</a>.`);
+        this.displayRecipes();
     },
 
     displaySuccess: async function(result) {
         $("#result").html(result)
+    },
+
+    displayRecipes: async function() {
+        const fleekInput = {
+            apiKey: '5IMtHxK6FwtjLOiNFZ1BxA==',
+            apiSecret: '2wCDPZz3HstZ/wsPPUZx4eXJ7qSWtPShy8dT7/jjiDg=',
+            bucket: 'xiliav-team-bucket',
+            getOptions: ['publicUrl']
+        }
+
+        const result = await fleek.listFiles(fleekInput)
+        $.each(result, function(index, value) {
+            $.ajax({
+                type: "GET",
+                url: value['publicUrl'],
+                dataType: "json",
+                success: function (data) {
+                    $("#all-recipes").append($("<p></p>").html(data['description']))
+                }
+            })
+        })
     }
 }
 
@@ -63,16 +87,6 @@ $(document).ready(async function () {
     if (window.ethereum) {
         App.web3 = new Web3(window.ethereum);
         window.ethereum.enable();
-        
-        const fleekInput = {
-            apiKey: '5IMtHxK6FwtjLOiNFZ1BxA==',
-            apiSecret: '2wCDPZz3HstZ/wsPPUZx4eXJ7qSWtPShy8dT7/jjiDg=',
-            bucket: 'xiliav-team-bucket',
-            getOptions: ['key']
-        }
-
-        const storedRecipes = await fleek.listFiles(fleekInput)
-        console.log(storedRecipes)
 
     } else {
         console.log("error")
