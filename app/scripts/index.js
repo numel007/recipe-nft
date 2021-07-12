@@ -45,21 +45,26 @@ const App = {
         }
 
         const result = await fleek.upload(uploadMetadata)
-        this.createRecipe(recipeName, method, result.publicUrl)
-
     },
 
     // This method mints a brand new recipe and adds it to the blockchain
     createRecipe: async function(recipeName, method, URL) {
         await this.recipeContract.methods._createRecipe(recipeName, method).send({ from: this.accountAddress });
-        this.displaySuccess(`You have created a recipe! View the data here: <a href="${URL}" target="_blank">here</a>.`);
+        this.displayMessage(`You have created a recipe! View the data here: <a href="${URL}" target="_blank">here</a>.`);
 
         $("#all-recipes").append($(`<p class=${recipeName}></p>`).html(`<b>Recipe Name:</b> ${recipeName} -- <b>Owner Address:</b> You are the owner of this recipe! <b style="color: #00ff00">(Recipe minted successfully!)</b>`));
     },
 
     // Transfer a recipe that you own to another user by specifying their address
     transferRecipe: async function(otherUsersAddress, recipeName) {
-        await this.recipeContract.methods._transferRecipe(otherUsersAddress, recipeName).send({ from: this.accountAddress });
+        try {
+            await this.recipeContract.methods._transferRecipe(otherUsersAddress, recipeName).send({ from: this.accountAddress });
+
+        } catch (error) { // Display error message if failed to transfer. This likely occurs if you are trying to transfer a recipe you don't own
+            this.displayMessage(`<b style="color: #ff0000">Error. You cannot transfer a recipe that you don't own!</b>`);
+            $(`.${recipeName}`).text(`<p class=${recipeName}></p>`).html(`<b>Recipe Name:</b> ${recipeName} -- <b>Owner Address:</b> ${otherUsersAddress} <b style="color: #ff0000">(Failed to transfer ownership.)</b>`);
+            return;
+        }
 
         // Parameters to delete metadata of previous recipe's owner
         const fleekDelete = {
@@ -84,13 +89,16 @@ const App = {
             data: JSON.stringify(newMetaData),
         }
 
+        // Call fleek's delete method with desired parameters
         const deleteFile = await fleek.deleteFile(fleekDelete);
-        const updateFile = await fleek.upload(fleekUpdate)
+        // Call fleek's upload method with desired parameters
+        const updateFile = await fleek.upload(fleekUpdate);
+        // Replace transferred recipe's original owner with new owner on webpage
         $(`.${recipeName}`).text(`<p class=${recipeName}></p>`).html(`<b>Recipe Name:</b> ${recipeName} -- <b>Owner Address:</b> ${otherUsersAddress} <b style="color: #00ff00">(Ownership Transferred!)</b>`);
     },
 
     // Display a success message and link to data on successful creation of new recipe
-    displaySuccess: async function(result) {
+    displayMessage: async function(result) {
         $("#result").html(result)
     },
 
@@ -119,6 +127,8 @@ $(document).ready(async function () {
 
     // Grab information about all recipes from fleek
     const result = await fleek.listFiles(fleekInput)
+
+        // Loop through all data and display on homepage
         $.each(result, function(index, value) {
             $.ajax({
                 type: "GET",
