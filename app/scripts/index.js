@@ -74,7 +74,7 @@ const App = {
                 url: value['publicUrl'],
                 dataType: "json",
                 success: function (data) {
-                    $("#all-recipes").append($("<p></p>").html(data['description']))
+                    $("#all-recipes").append($(`<p></p>`).html(`${data['description']}<a href="#" class="${data['description']}">Get This Recipe</a>`))
                 }
             })
         })
