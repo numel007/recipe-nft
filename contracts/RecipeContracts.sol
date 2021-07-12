@@ -3,6 +3,7 @@ pragma solidity >=0.8.0;
 import "../node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "../node_modules/@openzeppelin/contracts/utils/Counters.sol";
 import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
+import "../node_modules/solidity-string-utils/StringUtils.sol";
 
 contract RecipeContract is Ownable {
     using Counters for Counters.Counter;
@@ -38,28 +39,33 @@ contract RecipeContract is Ownable {
         return recipeOwner[_name];
     }
 
-    function _getAllRecipes()
-        public
-        view
-        returns (
-            string[] memory,
-            string[] memory,
-            uint256[] memory,
-            address[] memory
-        )
-    {
+    function _getAllRecipes() public view returns (string[] memory) {
         string[] memory names;
-        string[] memory methods;
-        uint256[] memory values;
-        address[] memory owners;
-        for (uint256 i = 0; i < recipeNames.length; i++) {
+        // string[] memory methods;
+        // uint256[] memory values;
+        // address[] memory owners;
+        uint256 recipesLength = recipeNames.length;
+        for (uint256 i = 0; i < recipesLength; i++) {
             names[i] = recipes[recipeNames[i]].name;
-            methods[i] = recipes[recipeNames[i]].method;
-            values[i] = recipes[recipeNames[i]].value;
-            owners[i] = recipes[recipeNames[i]].owner;
+            // methods[i] = recipes[recipeNames[i]].method;
+            // values[i] = recipes[recipeNames[i]].value;
+            // owners[i] = recipes[recipeNames[i]].owner;
         }
 
-        return (names, methods, values, owners);
+        return (names);
+    }
+
+    function _getRecipeValue(string memory _recipeName)
+        public
+        view
+        returns (uint256)
+    {
+        uint256 recipesLength = recipeNames.length;
+        for (uint256 i = 0; i < recipesLength; i++) {
+            if (StringUtils.equal(recipes[i].name, _recipeName)) {
+                return uint256(recipes[i].value);
+            }
+        }
     }
 
     function _transferRecipe(address newOwner, string memory _recipeName)
@@ -79,3 +85,7 @@ contract RecipeContract is Ownable {
         return recipeOwner[_recipeName];
     }
 }
+
+// let instance = await RecipeContract.deployed()
+// let bread = await instance._createRecipe("Bread", "yeast")
+// let getAll = await instance._getAllRecipes()
