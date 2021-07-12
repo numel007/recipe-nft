@@ -36,13 +36,12 @@ contract RecipeContract is Ownable {
         return recipeOwner[_name];
     }
 
-    function _transferRecipe(
-        address oldOwner,
-        address newOwner,
-        string memory _recipeName
-    ) public returns (address) {
-        // Ensure recipe belongs to old owner
-        require(recipeOwner[_recipeName] == oldOwner);
+    function _transferRecipe(address newOwner, string memory _recipeName)
+        public
+        returns (address)
+    {
+        // Ensure msg.sender is the one transferring the recipe
+        require(recipeOwner[_recipeName] == msg.sender);
 
         // Transfer recipe to newOwner
         recipeOwner[_recipeName] = newOwner;
