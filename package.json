@@ -7,13 +7,24 @@
     "test": "test"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint ./",
+    "build": "webpack",
+    "dev": "webpack-dev-server"
   },
   "author": "Jackie",
   "license": "MIT",
   "dependencies": {
     "@openzeppelin/contracts": "^4.2.0",
     "@truffle/hdwallet-provider": "^1.2.3",
-    "dotenv": "^10.0.0"
+    "dotenv": "^10.0.0",
+    "eth-gas-reporter": "^0.2.22",
+    "web3": "^1.2.4",
+    "zeppelin-solidity": "^1.12.0"
+  },
+  "devDependencies": {
+    "copy-webpack-plugin": "^5.0.5",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.9.0"
   }
 }
