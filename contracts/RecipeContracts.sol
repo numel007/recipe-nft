@@ -3,7 +3,8 @@ pragma solidity >=0.8.0;
 import "../node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "../node_modules/@openzeppelin/contracts/utils/Counters.sol";
 import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
-import "../node_modules/solidity-string-utils/StringUtils.sol";
+
+// import "../node_modules/solidity-string-utils/StringUtils.sol";
 
 contract RecipeContract is Ownable {
     using Counters for Counters.Counter;
@@ -18,7 +19,7 @@ contract RecipeContract is Ownable {
         address owner;
     }
 
-    mapping(string => Recipe) private recipes;
+    mapping(string => Recipe) public recipes;
     mapping(string => address) public recipeOwner;
     string[] public recipeNames;
 
@@ -60,12 +61,7 @@ contract RecipeContract is Ownable {
         view
         returns (uint256)
     {
-        uint256 recipesLength = recipeNames.length;
-        for (uint256 i = 0; i < recipesLength; i++) {
-            if (StringUtils.equal(recipes[i].name, _recipeName)) {
-                return uint256(recipes[i].value);
-            }
-        }
+        return (recipes[_recipeName].value);
     }
 
     function _transferRecipe(address newOwner, string memory _recipeName)
