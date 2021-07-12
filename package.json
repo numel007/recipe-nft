@@ -19,6 +19,7 @@
     "@truffle/hdwallet-provider": "^1.2.3",
     "dotenv": "^10.0.0",
     "eth-gas-reporter": "^0.2.22",
+    "solidity-string-utils": "^0.0.7",
     "web3": "^1.2.4",
     "zeppelin-solidity": "^1.12.0"
   },
