@@ -58,7 +58,7 @@ const App = {
     createRecipe: async function(recipeName, method) {
         await this.recipeContract.methods._createRecipe(recipeName, method).send({ from: this.accountAddress });
 
-        $("#all-recipes").append($(`<p class=${recipeName}></p>`).html(`<b>Recipe Name:</b> ${recipeName} -- <b>Owner Address:</b> You are the owner of this recipe! <b style="color: #00ff00">(Recipe minted successfully!)</b>`));
+        $("#all-recipes").append($(`<p class=${recipeName.replace(/\s/g, "-")}></p>`).html(`<b>Recipe Name:</b> ${recipeName} -- <b>Owner Address:</b> You are the owner of this recipe! <b style="color: #00ff00">(Recipe minted successfully!)</b>`));
     },
 
     // Transfer a recipe that you own to another user by specifying their address
@@ -100,7 +100,7 @@ const App = {
         // Call fleek's upload method with desired parameters
         const updateFile = await fleek.upload(fleekUpdate);
         // Replace transferred recipe's original owner with new owner on webpage
-        $(`.${recipeName}`).text(`<p class=${recipeName}></p>`).html(`<b>Recipe Name:</b> ${recipeName} -- <b>Owner Address:</b> ${otherUsersAddress} <b style="color: #00ff00">(Ownership Transferred!)</b>`);
+        $(`.${recipeName.replace(/\s/g, "-")}`).text(`<p class=${recipeName}></p>`).html(`<b>Recipe Name:</b> ${recipeName} -- <b>Owner Address:</b> ${otherUsersAddress} <b style="color: #00ff00">(Ownership Transferred!)</b>`);
     },
 
     // Display a success message and link to data on successful creation of new recipe
@@ -149,7 +149,7 @@ $(document).ready(async function () {
                         owner = data.ownerAddress
                     }
 
-                    $("#all-recipes").append($(`<p class=${data.recipeName}></p>`).html(`<b>Recipe Name:</b> ${data.recipeName} -- <b>Owner Address:</b> ${owner}`));
+                    $("#all-recipes").append($(`<p class=${data.recipeName.replace(/\s/g, "-")}></p>`).html(`<b>Recipe Name:</b> ${data.recipeName} -- <b>Owner Address:</b> ${owner}`));
                 }
             })
         })
