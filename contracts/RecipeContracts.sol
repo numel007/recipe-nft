@@ -22,7 +22,7 @@ contract RecipeContract is Ownable {
 
     function _createRecipe(string memory _name, string memory _method) public {
         // Create recipe from params, set value to 1, owner to msg.sender
-        require(recipes[_name].value != 0);
+        require(recipes[_name].value == 0);
         Recipe memory newRecipe = Recipe(_name, _method, 1, msg.sender);
 
         // Add to recipes mapping
