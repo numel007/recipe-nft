@@ -14,21 +14,21 @@ contract RecipeContract is Ownable {
         string name;
         string method;
         uint256 value;
+        address owner;
     }
 
-    Recipe[] public recipes;
+    mapping(string => Recipe) private recipes;
     mapping(uint256 => address) public recipeOwner;
 
     function _createRecipe(string memory _name, string memory _method) public {
-        // Create recipe from params, set value to 1
-        Recipe memory newRecipe = Recipe(_name, _method, 1);
+        // Create recipe from params, set value to 1, owner to msg.sender
+        require(recipes[_name].value != 0);
+        Recipe memory newRecipe = Recipe(_name, _method, 1, msg.sender);
 
-        // Push to recipes array and return id
-        recipes.push(newRecipe);
-        uint256 id = recipes.length - 1;
+        // Push to recipes mapping
+        recipes[_name] = newRecipe;
 
         // Add recipe to dict, assign to msg.sender
-        recipeOwner[id] = msg.sender;
     }
 
     function _getOwner(uint256 recipeId) public view returns (address) {
