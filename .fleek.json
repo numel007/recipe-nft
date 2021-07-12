@@ -1,0 +1,14 @@
+{
+  "site": {
+    "id": "16dfffae-2907-4017-aa92-6a42f524dea4",
+    "team": "xiliav-team",
+    "platform": "ipfs",
+    "source": "ipfs",
+    "name": "ancient-term-2783"
+  },
+  "build": {
+    "baseDir": "",
+    "publicDir": "",
+    "rootDir": ""
+  }
+}
