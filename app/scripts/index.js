@@ -30,6 +30,12 @@ const App = {
 
     // This method stores newly minted recipe's data to fleek
     storeRecipe: async function(recipeName, method) {
+        try {
+            await this.createRecipe(recipeName, method);
+        } catch (error) {
+            this.displayMessage(`<b style="color: #ff0000">Error. Recipe name already exists. Please choose a new one.`);
+            return;
+        }
         const metadata = {
             "name": "Recipe NFT",
             "recipeName": recipeName,
@@ -45,12 +51,12 @@ const App = {
         }
 
         const result = await fleek.upload(uploadMetadata)
+        this.displayMessage(`You have created a recipe! View the data <a href="${result.publicUrl}" target="_blank">here.</a>.`);
     },
 
     // This method mints a brand new recipe and adds it to the blockchain
-    createRecipe: async function(recipeName, method, URL) {
+    createRecipe: async function(recipeName, method) {
         await this.recipeContract.methods._createRecipe(recipeName, method).send({ from: this.accountAddress });
-        this.displayMessage(`You have created a recipe! View the data here: <a href="${URL}" target="_blank">here</a>.`);
 
         $("#all-recipes").append($(`<p class=${recipeName}></p>`).html(`<b>Recipe Name:</b> ${recipeName} -- <b>Owner Address:</b> You are the owner of this recipe! <b style="color: #00ff00">(Recipe minted successfully!)</b>`));
     },
