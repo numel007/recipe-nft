@@ -9,16 +9,24 @@ contract RecipeContract is ERC721URIStorage {
 
     constructor() public ERC721("Recipe", "RCP") {}
 
-    function awardItem(address player, string memory tokenURI)
-        public
-        returns (uint256)
-    {
-        _tokenIds.increment();
+    struct Recipe {
+        string name;
+        string method;
+        uint256 value;
+    }
 
-        uint256 newItemId = _tokenIds.current();
-        _mint(player, newItemId);
-        _setTokenURI(newItemId, tokenURI);
+    Recipe[] public recipes;
+    mapping(uint256 => address) public recipeOwner;
 
-        return newItemId;
+    function _createRecipe(string memory _name, string memory _method) private {
+        // Create recipe from params, set value to 1
+        Recipe memory newRecipe = Recipe(_name, _method, 1);
+
+        // Push to recipes array and return id
+        recipes.push(newRecipe);
+        uint256 id = recipes.length - 1;
+
+        // Add recipe to dict, assign to msg.sender
+        recipeOwner[id] = msg.sender;
     }
 }

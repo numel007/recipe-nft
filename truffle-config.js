@@ -22,11 +22,6 @@ require("dotenv").config();
 const HDWalletProvider = require("@truffle/hdwallet-provider");
 const infuraKey = process.env.INFURA_KEY;
 const mnemonic = process.env.MNEMONIC;
-// const HDWalletProvider = require('@truffle/hdwallet-provider');
-// const infuraKey = "fj4jll3k.....";
-//
-// const fs = require('fs');
-// const mnemonic = fs.readFileSync(".secret").toString().trim();
 
 module.exports = {
 	/**
@@ -38,27 +33,32 @@ module.exports = {
 	 *
 	 * $ truffle test --network <network-name>
 	 */
-
 	networks: {
 		development: {
-			host: "127.0.0.1",
-			port: 8845,
-			network_id: "*",
+			host: "127.0.0.1", // Localhost (default: none)
+			port: 8545, // Standard Ethereum port (default: none)
+			network_id: "*", // Any network (default: none)
 		},
 		rinkeby: {
 			provider: () =>
 				new HDWalletProvider(mnemonic, `https://rinkeby.infura.io/v3/${infuraKey}`),
-			network_id: 4,
-			gas: 5500000,
-			confirmations: 2,
-			timeoutBlcoks: 200,
-			skipDryRun: true,
+			network_id: 4, // rinkeby's id
+			gas: 5500000, // Ropsten has a lower block limit than mainnet
+			confirmations: 2, // # of confs to wait between deployments. (default: 0)
+			timeoutBlocks: 200, // # of blocks before a deployment times out  (minimum/default: 50)
+			skipDryRun: true, // Skip dry run before migrations? (default: false for public nets )
 		},
 	},
 
 	// Set default mocha options here, use special reporters etc.
 	mocha: {
-		// timeout: 100000
+		timeout: 100000,
+		reporter: "eth-gas-reporter",
+		reporterOptions: {
+			currency: "USD",
+			gasPrice: 1,
+		},
+		color: true,
 	},
 
 	// Configure your compilers
@@ -75,6 +75,10 @@ module.exports = {
 				evmVersion: "byzantium",
 			},
 		},
+	},
+
+	develop: {
+		port: 8545,
 	},
 
 	// Truffle DB is currently disabled by default; to enable it, change enabled: false to enabled: true
