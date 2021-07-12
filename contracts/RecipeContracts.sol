@@ -41,8 +41,16 @@ contract RecipeContract is Ownable {
         address newOwner,
         string memory _recipeName
     ) private returns (address) {
+        // Ensure recipe belongs to old owner
         require(recipeOwner[_recipeName] == oldOwner);
+
+        // Transfer recipe to newOwner
         recipeOwner[_recipeName] = newOwner;
+        recipes[_recipeName].owner = newOwner;
+
+        // Increment recipe's value
+        recipes[_recipeName].value++;
+
         return recipeOwner[_recipeName];
     }
 }
