@@ -54,7 +54,7 @@ const App = {
         await this.recipeContract.methods._createRecipe(recipeName, method).send({ from: this.accountAddress });
         this.displaySuccess(`You have created a recipe! View the data here: <a href="${URL}" target="_blank">here</a>.`);
 
-        $("#all-recipes").append($(`<p class=${recipeName}></p>`).html(`<b>Recipe Name:</b> ${recipeName} -- <b>Owner Address:</b> You are the owner of this recipe!`));
+        $("#all-recipes").append($(`<p class=${recipeName}></p>`).html(`<b>Recipe Name:</b> ${recipeName} -- <b>Owner Address:</b> You are the owner of this recipe! <b style="color: #00ff00">(Recipe minted successfully!)</b>`));
     },
 
     // Transfer a recipe that you own to another user by specifying their address
@@ -86,9 +86,7 @@ const App = {
 
         const deleteFile = await fleek.deleteFile(fleekDelete);
         const updateFile = await fleek.upload(fleekUpdate)
-        $(`.${recipeName}`).remove();
-        $("#all-recipes").append($(`<p class=${recipeName}></p>`).html(`<b>Recipe Name:</b> ${recipeName} -- <b>Owner Address:</b> ${otherUsersAddress}`));
-
+        $(`.${recipeName}`).text(`<p class=${recipeName}></p>`).html(`<b>Recipe Name:</b> ${recipeName} -- <b>Owner Address:</b> ${otherUsersAddress} <b style="color: #00ff00">(Ownership Transferred!)</b>`);
     },
 
     // Display a success message and link to data on successful creation of new recipe
