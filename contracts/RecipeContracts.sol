@@ -19,8 +19,8 @@ contract RecipeContract is Ownable {
         address owner;
     }
 
-    mapping(string => Recipe) public recipes;
-    mapping(string => address) public recipeOwner;
+    mapping(string => Recipe) private recipes;
+    mapping(string => address) private recipeOwner;
     string[] public recipeNames;
 
     function _createRecipe(string memory _name, string memory _method) public {
@@ -81,7 +81,3 @@ contract RecipeContract is Ownable {
         return recipeOwner[_recipeName];
     }
 }
-
-// let instance = await RecipeContract.deployed()
-// let bread = await instance._createRecipe("Bread", "yeast")
-// let getAll = await instance._getAllRecipes()
