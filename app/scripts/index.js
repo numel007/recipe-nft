@@ -28,6 +28,17 @@ const App = {
         }
     },
 
+    // This method retrieves the value of a recipe and displays it on the page
+    getValue: async function(name) {
+        const recipeValue = await this.recipeContract.methods._getRecipeValue(name).call()
+
+        if (recipeValue == 0){
+            this.displayMessage(`<span style="color: #ff0000"><b>This recipe does not exist. Please enter a valid recipe.</b></span>`)
+        } else {
+            this.displayMessage(`Value of <b>${name}</b>: <span style="color: #ff0000">${recipeValue}</span>`)
+        }
+    },
+
     // This method stores newly minted recipe's data to fleek
     storeRecipe: async function(recipeName, method) {
         try {
@@ -51,7 +62,7 @@ const App = {
         }
 
         const result = await fleek.upload(uploadMetadata)
-        this.displayMessage(`You have created a recipe! View the data <a href="${result.publicUrl}" target="_blank">here.</a>.`);
+        this.displayMessage(`You have created a recipe! View the data <a href="${result.publicUrl}" target="_blank">here</a>.`);
     },
 
     // This method mints a brand new recipe and adds it to the blockchain
@@ -105,7 +116,7 @@ const App = {
 
     // Display a success message and link to data on successful creation of new recipe
     displayMessage: async function(result) {
-        $("#result").html(result)
+        $("#message").html(result)
     },
 
 }
@@ -172,5 +183,13 @@ $(document).ready(async function () {
         const transferAddress = $("#other-user-address").val();
 
         window.App.transferRecipe(transferAddress, recipeName);
+    });
+
+    $("#get-value-submit").on("click", function (e) {
+        e.preventDefault();
+
+        const inputValue = $("#value-name").val();
+
+        window.App.getValue(inputValue);
     });
 })
