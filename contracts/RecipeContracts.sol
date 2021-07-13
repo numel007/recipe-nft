@@ -4,13 +4,9 @@ import "../node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721UR
 import "../node_modules/@openzeppelin/contracts/utils/Counters.sol";
 import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 
-// import "../node_modules/solidity-string-utils/StringUtils.sol";
-
 contract RecipeContract is Ownable {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
-
-    // constructor() public ERC721("Recipe", "RCP") {}
 
     struct Recipe {
         string name;
@@ -42,15 +38,9 @@ contract RecipeContract is Ownable {
 
     function _getAllRecipes() public view returns (string[] memory) {
         string[] memory names;
-        // string[] memory methods;
-        // uint256[] memory values;
-        // address[] memory owners;
         uint256 recipesLength = recipeNames.length;
         for (uint256 i = 0; i < recipesLength; i++) {
             names[i] = recipes[recipeNames[i]].name;
-            // methods[i] = recipes[recipeNames[i]].method;
-            // values[i] = recipes[recipeNames[i]].value;
-            // owners[i] = recipes[recipeNames[i]].owner;
         }
 
         return (names);
